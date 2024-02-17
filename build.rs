@@ -9,6 +9,6 @@ fn main() -> Result<(), Box<dyn Error>> {
     // };
 
     println!("cargo:rerun-if-changed=vendor.c");
-
+    println!("cargo:rerun-if-changed=build.rs");
     Ok(())
 }
