@@ -42,3 +42,4 @@ Use `cargo_zigbuild` and `bindgen` directly in `build.rs`, check commented code 
 
 Official cargo reference: <https://doc.rust-lang.org/cargo/reference/build-script-examples.html>
 Zig cross compilation:
+Bindgen from build.rs: <https://rust-lang.github.io/rust-bindgen/tutorial-3.html>
