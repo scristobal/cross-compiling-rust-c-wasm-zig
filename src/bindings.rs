@@ -32,9 +32,5 @@ fn bindgen_test_layout_Pair() {
     );
 }
 extern "C" {
-    pub fn gcd(
-        i: ::std::os::raw::c_int,
-        c: ::std::os::raw::c_char,
-        ps: *mut Pair,
-    ) -> ::std::os::raw::c_int;
+    pub fn gcd(i: ::std::os::raw::c_int, ps: *mut Pair) -> ::std::os::raw::c_int;
 }

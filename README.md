@@ -4,9 +4,21 @@ How to cross-compile a Rust project with C dependencies into WASM and WASI using
 
 ## Create a sample project
 
- TODO: Write main code in Rust plus auxiliary library in C
+Main code in Rust plus auxiliary library in C that also uses a C or C++ system library
 
-## Quick and dirty, try out in WASI using CLIs
+### Building a native library
+
+### Link to a system library
+
+## Part I: Cross compile to Web Assembly using CLI tools
+
+### Generate Rust bindings for the C code
+
+```bash
+bindgen vendor/def.h -o src/bindings.rs
+```
+
+### Quick WASI try out
 
 ```bash
 rustup target add wasm32-wasi # ensure wasm32-wasi target is installed `
@@ -14,14 +26,14 @@ cargo zigbuild --target=wasm32-wasi --release # cross compile to WASI
 wasm3 target/wasm32-wasi/release/rust-ffi-playground.was # try it out, requires wasm3 TODO: add install ref.
 ```
 
-## Cross compile for web (using CLIs)
+### Cross compile for web
 
 ```bash
 cargo zigbuild --target=wasm32-unknown-unknown --release # cross compile to WASM
 wasm-bindgen target/wasm32-unknown-unknown/release/rust-ffi-playground.wasm --out-dir ./bin --target web # generate JS and TS bindings to WASM code
 ```
 
-manually include the file in HTML with
+manually include the script tag to load and initialize the wasm module
 
 ```html
  <script type="module">
@@ -30,16 +42,60 @@ manually include the file in HTML with
  </script>
 ```
 
-or use a WASM plugin like vite-wasm-plugin  TODO: add reference and link
+or use a WASM plugin like `vite-plugin-wasm` or use Trunk
 
-## Cross compile for the web (using `builder.rs`)
+### Using a `Makefile`
 
-Use `cargo_zigbuild` and `bindgen` directly in `build.rs`, check commented code on `build.rs`   TODO: explain the changes
+A simple `Makefile` to perform the build steps in order
 
-## Link to a system library
+### Part II: Cross compile for the web using `builder.rs`
+
+Use `cargo_zigbuild` and `bindgen` directly in `build.rs`
+
+## Using `zigbuild` instead of `cc`
+
+```rust
+use cargo_zigbuild::Zig::Cc;
+use std::{env, error::Error};
+
+fn main() -> Result<(), Box<dyn Error>> {
+    cc::Build::new().file("vendor/def.c").compile("def");
+
+    let out_dir = env::var("OUT_DIR").unwrap();
+
+    let cc = Cc {
+        args: vec![
+            format!("vendor/def.c"),
+            "-c".to_string(),
+            "-o".to_string(),
+            format!("{}/def.o", out_dir),
+        ],
+    };
+
+    cc.execute().expect("Failed to compile def.c");
+
+    let ar = cargo_zigbuild::Zig::Ar {
+        args: vec![
+            "crus".to_string(),
+            format!("{}/libdef.a", out_dir),
+            format!("{}/def.o", out_dir),
+        ],
+    };
+
+    ar.execute().expect("Failed to create def.a");
+
+    println!("cargo:rustc-link-search=native={}", out_dir);
+    println!("cargo:rustc-link-lib=static=def");
+
+    println!("cargo:rerun-if-changed=vendor");
+    println!("cargo:rerun-if-changed=build.rs");
+    Ok(())
+}
+
+```
 
 ## References
 
-Official cargo reference: <https://doc.rust-lang.org/cargo/reference/build-script-examples.html>
-Zig cross compilation:
-Bindgen from build.rs: <https://rust-lang.github.io/rust-bindgen/tutorial-3.html>
+- [Official cargo reference](https://doc.rust-lang.org/cargo/reference/build-script-examples.html)
+- Zig cross compilation
+- [Bindgen tutorial](https://rust-lang.github.io/rust-bindgen/tutorial-3.html)

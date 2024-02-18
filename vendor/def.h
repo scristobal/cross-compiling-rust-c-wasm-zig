@@ -3,4 +3,4 @@ typedef struct Pair {
     int m;
 } Pair;
 
-int gcd(int i, char c, Pair* ps);
+int gcd(int i, Pair* ps);
