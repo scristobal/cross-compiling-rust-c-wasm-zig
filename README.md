@@ -44,6 +44,10 @@ manually include the script tag to load and initialize the wasm module
 
 or use a WASM plugin like `vite-plugin-wasm` or use Trunk
 
+## Optimize wasm
+
+[Shrinking `.wasm` code size](https://rustwasm.github.io/docs/book/reference/code-size.html)
+
 ### Using a `Makefile`
 
 A simple `Makefile` to perform the build steps in order
@@ -95,9 +99,11 @@ fn main() -> Result<(), Box<dyn Error>> {
 
 ## References
 
+- [The `cc-rs` project](https://crates.io/crates/cc)
 - [Official cargo reference](https://doc.rust-lang.org/cargo/reference/build-script-examples.html)
 - Zig cross compilation
 - [Bindgen tutorial](https://rust-lang.github.io/rust-bindgen/tutorial-3.html)
+- [The embedded Rust book](https://docs.rust-embedded.org/book/interoperability/c-with-rust.html)
 
 ---
 
