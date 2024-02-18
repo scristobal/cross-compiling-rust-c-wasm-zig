@@ -30,7 +30,7 @@ wasm3 target/wasm32-wasi/release/rust-ffi-playground.was # try it out, requires 
 
 ```bash
 cargo zigbuild --target=wasm32-unknown-unknown --release # cross compile to WASM
-wasm-bindgen target/wasm32-unknown-unknown/release/rust-ffi-playground.wasm --out-dir ./bin --target web # generate JS and TS bindings to WASM code
+wasm-bindgen target/wasm32-unknown-unknown/release/rust-ffi-playground.wasm --out-dir ./dist --target web # generate JS and TS bindings to WASM code
 ```
 
 manually include the script tag to load and initialize the wasm module
@@ -91,7 +91,6 @@ fn main() -> Result<(), Box<dyn Error>> {
     println!("cargo:rerun-if-changed=build.rs");
     Ok(())
 }
-
 ```
 
 ## References
@@ -99,3 +98,9 @@ fn main() -> Result<(), Box<dyn Error>> {
 - [Official cargo reference](https://doc.rust-lang.org/cargo/reference/build-script-examples.html)
 - Zig cross compilation
 - [Bindgen tutorial](https://rust-lang.github.io/rust-bindgen/tutorial-3.html)
+
+---
+
+## Remarks
+
+> In general, a `lib<name>.so` or `lib<name>.a` should be referenced in the build file by `<name>`.
