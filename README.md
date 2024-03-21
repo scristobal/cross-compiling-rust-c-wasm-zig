@@ -137,6 +137,10 @@ From their README:
 
 > The translator and refactoring tool support both macOS and Linux. Other features, such as cross checking the functionality between C and Rust code, are currently limited to Linux hosts.
 
+## Utils
+
+- https://wasm-feature-detect.surma.technology/ [source](https://github.com/GoogleChromeLabs/wasm-feature-detect)
+
 ---
 
 ## Remarks
