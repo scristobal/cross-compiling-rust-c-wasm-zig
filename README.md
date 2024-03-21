@@ -117,6 +117,26 @@ More:
 - https://github.com/rustwasm/team/issues/291#issuecomment-644946504
 - https://github.com/rustwasm/team/issues/291#issuecomment-645492619
 
+## Other tools
+
+- [c2rust](https://github.com/immunant/c2rust) - C to Rust translator produces `unsafe` Rust code from C99-compilant C code. It does not support cross compilation, but maybe it can with the help of Zig.
+
+From their website:
+
+> C source code is parsed and typechecked using clang before being translated by our tool.
+
+would it be possible to use it with Zig as a drop-in replacement for clang?
+
+From their README:
+
+> I translated code on platform X, but it didn't work correctly on platform Y.
+
+> We run the C preprocessor before translation to Rust. This specializes the code to the host platform. For this reason, we do not support cross compiling translated code at the moment.
+
+> What platforms can C2Rust be run on?
+
+> The translator and refactoring tool support both macOS and Linux. Other features, such as cross checking the functionality between C and Rust code, are currently limited to Linux hosts.
+
 ---
 
 ## Remarks
