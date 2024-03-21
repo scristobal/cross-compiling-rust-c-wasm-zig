@@ -44,6 +44,10 @@ manually include the script tag to load and initialize the wasm module
 
 or use a WASM plugin like `vite-plugin-wasm` or use Trunk
 
+Note aternative: As in thies [github issue](https://github.com/rustwasm/team/issues/291#issuecomment-644946504) it can be compiled to `wasm32-unknown-emscripten`. Can we then use `wasm-bindgen` to generate the bindings?
+
+Same [example](https://github.com/rustwasm/team/issues/291#issuecomment-645492619) but using `wasm-pack`, hence `wasm-bindgen` instead
+
 ## Optimize wasm
 
 [Shrinking `.wasm` code size](https://rustwasm.github.io/docs/book/reference/code-size.html)
@@ -109,13 +113,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
 wasm-bindgen targets `wasm32-unknown-unknown` and `wasi-unknown` do not (fully) support C-ABI, only older targets like `wasm32-unknown-emscripten`.
 
-More:
-
-- https://github.com/rustwasm/team/issues/291#issuecomment-645482430
-- https://github.com/rustwasm/team/issues/291#issuecomment-645494771
-- https://github.com/rustwasm/wasm-bindgen/pull/2209
-- https://github.com/rustwasm/team/issues/291#issuecomment-644946504
-- https://github.com/rustwasm/team/issues/291#issuecomment-645492619
+See [comment](https://github.com/rustwasm/team/issues/291#issuecomment-645482430), [comment](https://github.com/rustwasm/team/issues/291#issuecomment-645494771) and [documentation PR](https://github.com/rustwasm/wasm-bindgen/pull/2209)
 
 ## Other tools
 
