@@ -36,10 +36,10 @@ wasm-bindgen target/wasm32-unknown-unknown/release/rust-ffi-playground.wasm --ou
 manually include the script tag to load and initialize the wasm module
 
 ```html
- <script type="module">
-    import init from "./bin/rust-ffi-playground.js";
-    init().then( () => console.log( "WASM Loaded" ) );
- </script>
+<script type="module">
+  import init from "./bin/rust-ffi-playground.js";
+  init().then(() => console.log("WASM Loaded"));
+</script>
 ```
 
 or use a WASM plugin like `vite-plugin-wasm` or use Trunk
@@ -104,6 +104,18 @@ fn main() -> Result<(), Box<dyn Error>> {
 - Zig cross compilation
 - [Bindgen tutorial](https://rust-lang.github.io/rust-bindgen/tutorial-3.html)
 - [The embedded Rust book](https://docs.rust-embedded.org/book/interoperability/c-with-rust.html)
+
+## Issues
+
+wasm-bindgen targets `wasm32-unknown-unknown` and `wasi-unknown` do not (fully) support C-ABI, only older targets like `wasm32-unknown-emscripten`.
+
+More:
+
+- https://github.com/rustwasm/team/issues/291#issuecomment-645482430
+- https://github.com/rustwasm/team/issues/291#issuecomment-645494771
+- https://github.com/rustwasm/wasm-bindgen/pull/2209
+- https://github.com/rustwasm/team/issues/291#issuecomment-644946504
+- https://github.com/rustwasm/team/issues/291#issuecomment-645492619
 
 ---
 
