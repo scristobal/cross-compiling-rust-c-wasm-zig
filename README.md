@@ -101,13 +101,14 @@ fn main() -> Result<(), Box<dyn Error>> {
 - [Bindgen tutorial](https://rust-lang.github.io/rust-bindgen/tutorial-3.html)
 - [The embedded Rust book](https://docs.rust-embedded.org/book/interoperability/c-with-rust.html)
 - [Shrinking `.wasm` code size](https://rustwasm.github.io/docs/book/reference/code-size.html)
-- [Compile Rust+C to WASM directly (nightly flag)](https://github.com/rustwasm/team/issues/291#issuecomment-2138201722)
 
 ## Issues
 
 wasm-bindgen targets `wasm32-unknown-unknown` and `wasi-unknown` do not (fully) support C-ABI, only older targets like `wasm32-unknown-emscripten`.
 
 See [comment](https://github.com/rustwasm/team/issues/291#issuecomment-645482430), [comment](https://github.com/rustwasm/team/issues/291#issuecomment-645494771) and [documentation PR](https://github.com/rustwasm/wasm-bindgen/pull/2209)
+
+There is an experimental flag `--Z wasm_c_abi=spec` that [circumvents this limitation](https://github.com/rustwasm/team/issues/291#issuecomment-2138201722)
 
 ## Other tools
 
