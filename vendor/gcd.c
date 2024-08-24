@@ -1,4 +1,4 @@
-#include "def.h"
+#include "gcd.h"
 
 int gcd(int i, Pair* ps) {
     int gcd;

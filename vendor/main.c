@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "def.h"
+#include "gcd.h"
 
 int main() {
     Pair ps;

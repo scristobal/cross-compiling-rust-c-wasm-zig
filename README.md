@@ -2,17 +2,13 @@
 
 How to cross-compile a Rust project with C dependencies into WASM and WASI using Zig
 
-## Create a sample project
+## Cross compile a Rust project with C dependencies into WebAssembly
 
-Main code in Rust plus auxiliary library in C that also uses a C or C++ system library
-
-### Building a native library
-
-### Link to a system library
-
-## Part I: Cross compile to Web Assembly using CLI tools
+Easy way using [rust-bindgen](https://github.com/rust-lang/rust-bindgen) and [cargo-zigbuild](https://github.com/rust-cross/cargo-zigbuild) CLI tools.
 
 ### Generate Rust bindings for the C code
+
+We just need the C/C++ header files wit the definitions and rust-bindgen will generate the Rust FFI bindings.
 
 ```bash
 bindgen vendor/def.h -o src/bindings.rs
@@ -20,20 +16,24 @@ bindgen vendor/def.h -o src/bindings.rs
 
 ### Quick WASI try out
 
+Using zigbuild we can cross compile to WASI, and using [wasm3](https://github.com/wasm3/wasm3) engine (or other we can try it out).
+
 ```bash
 rustup target add wasm32-wasi # ensure wasm32-wasi target is installed `
 cargo zigbuild --target=wasm32-wasi --release # cross compile to WASI
-wasm3 target/wasm32-wasi/release/rust-ffi-playground.was # try it out, requires wasm3 TODO: add install ref.
+wasm3 target/wasm32-wasi/release/rust-ffi-playground.wasm # try it out, requires wasm3 TODO: add install ref.
 ```
 
 ### Cross compile for web
+
+Generate code for WASM with zigbuild, and then use [wasm-bindgen](https://github.com/rustwasm/wasm-bindgen) to generate the js/ts bindings to the WASM code.
 
 ```bash
 cargo zigbuild --target=wasm32-unknown-unknown --release # cross compile to WASM
 wasm-bindgen target/wasm32-unknown-unknown/release/rust-ffi-playground.wasm --out-dir ./dist --target web # generate JS and TS bindings to WASM code
 ```
 
-manually include the script tag to load and initialize the wasm module
+To try it, manually include the script tag to load and initialize the wasm module
 
 ```html
 <script type="module">
@@ -42,25 +42,17 @@ manually include the script tag to load and initialize the wasm module
 </script>
 ```
 
-or use a WASM plugin like `vite-plugin-wasm` or use Trunk
+or use a WASM plugin like [`vite-plugin-wasm`](https://www.npmjs.com/package/vite-plugin-wasm) or use [Trunk](https://trunkrs.dev/)
 
-Note aternative: As in thies [github issue](https://github.com/rustwasm/team/issues/291#issuecomment-644946504) it can be compiled to `wasm32-unknown-emscripten`. Can we then use `wasm-bindgen` to generate the bindings?
+Note: As in this [github issue](https://github.com/rustwasm/team/issues/291#issuecomment-644946504) it can be compiled to `wasm32-unknown-emscripten`. Can we then use `wasm-bindgen` to generate the bindings?
 
 Same [example](https://github.com/rustwasm/team/issues/291#issuecomment-645492619) but using `wasm-pack`, hence `wasm-bindgen` instead
 
-## Optimize wasm
+### Going further
 
-[Shrinking `.wasm` code size](https://rustwasm.github.io/docs/book/reference/code-size.html)
+Not a trivial project, eg. building a native library, link to a system library...
 
-### Using a `Makefile`
-
-A simple `Makefile` to perform the build steps in order
-
-### Part II: Cross compile for the web using `builder.rs`
-
-Use `cargo_zigbuild` and `bindgen` directly in `build.rs`
-
-## Using `zigbuild` instead of `cc`
+A simple `Makefile` to perform the build steps in order or cross compile for the web using `builder.rs` instead: Use `cargo_zigbuild` and `bindgen` directly in `build.rs` by replacing `cc` with `zigbuild`
 
 ```rust
 use cargo_zigbuild::Zig::Cc;
@@ -108,6 +100,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 - Zig cross compilation
 - [Bindgen tutorial](https://rust-lang.github.io/rust-bindgen/tutorial-3.html)
 - [The embedded Rust book](https://docs.rust-embedded.org/book/interoperability/c-with-rust.html)
+- [Shrinking `.wasm` code size](https://rustwasm.github.io/docs/book/reference/code-size.html)
 
 ## Issues
 
@@ -128,16 +121,13 @@ would it be possible to use it with Zig as a drop-in replacement for clang?
 From their README:
 
 > I translated code on platform X, but it didn't work correctly on platform Y.
-
 > We run the C preprocessor before translation to Rust. This specializes the code to the host platform. For this reason, we do not support cross compiling translated code at the moment.
-
 > What platforms can C2Rust be run on?
-
 > The translator and refactoring tool support both macOS and Linux. Other features, such as cross checking the functionality between C and Rust code, are currently limited to Linux hosts.
 
 ## Utils
 
-- https://wasm-feature-detect.surma.technology/ [source](https://github.com/GoogleChromeLabs/wasm-feature-detect)
+- <https://wasm-feature-detect.surma.technology/> [source](https://github.com/GoogleChromeLabs/wasm-feature-detect)
 
 ---
 
