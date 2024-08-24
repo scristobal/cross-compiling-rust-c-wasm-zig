@@ -101,6 +101,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 - [Bindgen tutorial](https://rust-lang.github.io/rust-bindgen/tutorial-3.html)
 - [The embedded Rust book](https://docs.rust-embedded.org/book/interoperability/c-with-rust.html)
 - [Shrinking `.wasm` code size](https://rustwasm.github.io/docs/book/reference/code-size.html)
+- [Compile Rust+C to WASM directly (nightly flag)](https://github.com/rustwasm/team/issues/291#issuecomment-2138201722)
 
 ## Issues
 
