@@ -1,8 +1,4 @@
-# From Rust + C to Web Assembly with the help of Zig
-
-How to cross-compile a Rust project with C dependencies into WASM and WASI using Zig
-
-## Cross compile a Rust project with C dependencies into WebAssembly
+# Crosscompile a Rust project with C dependencies into Web Assembly (WASM and WASI) using Zig
 
 Easy way using [rust-bindgen](https://github.com/rust-lang/rust-bindgen) and [cargo-zigbuild](https://github.com/rust-cross/cargo-zigbuild) CLI tools.
 
