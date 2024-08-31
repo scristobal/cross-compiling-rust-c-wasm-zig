@@ -4,29 +4,29 @@ Easy way using [rust-bindgen](https://github.com/rust-lang/rust-bindgen) and [ca
 
 ### Generate Rust bindings for the C code
 
-We just need the C/C++ header files wit the definitions and rust-bindgen will generate the Rust FFI bindings.
+We just need the C/C++ header files wit the definitions and [rust-bindgen](https://github.com/rust-lang/rust-bindgen) will generate the Rust FFI bindings.
 
 ```bash
-bindgen vendor/def.h -o src/bindings.rs
+bindgen vendor/gcd.h -o src/bindings.rs # generate Rust FFI bindings for gcd.h
 ```
 
 ### Quick WASI try out
 
-Using zigbuild we can cross compile to WASI, and using [wasm3](https://github.com/wasm3/wasm3) engine (or other we can try it out).
+Using [zigbuild](https://github.com/rust-cross/cargo-zigbuild) we can cross compile to WASI, and using [wasm3](https://github.com/wasm3/wasm3) engine (or other we can try it out).
 
 ```bash
-rustup target add wasm32-wasi # ensure wasm32-wasi target is installed `
-cargo zigbuild --target=wasm32-wasi --release # cross compile to WASI
-wasm3 target/wasm32-wasi/release/rust-ffi-playground.wasm # try it out, requires wasm3 TODO: add install ref.
+rustup target add wasm32-wasi # make sure wasm32-wasi target is installed 
+cargo zigbuild --target=wasm32-wasi --release # cross compile to WASI, release flag is optional
+wasm3 target/wasm32-wasi/release/rust-ffi-playground.wasm # try it out, requires wasm3 
 ```
 
-### Cross compile for web
+### Cross compile for web (WASM)
 
-Generate code for WASM with zigbuild, and then use [wasm-bindgen](https://github.com/rustwasm/wasm-bindgen) to generate the js/ts bindings to the WASM code.
+Generate code for WASM with [zigbuild](https://github.com/rust-cross/cargo-zigbuild), and then use [wasm-bindgen](https://github.com/rustwasm/wasm-bindgen) to generate the js/ts bindings to the WASM code.
 
 ```bash
-cargo zigbuild --target=wasm32-unknown-unknown --release # cross compile to WASM
-wasm-bindgen target/wasm32-unknown-unknown/release/rust-ffi-playground.wasm --out-dir ./dist --target web # generate JS and TS bindings to WASM code
+cargo zigbuild --target=wasm32-unknown-unknown --release # cross compile to WASM, release flag is optional
+wasm-bindgen target/wasm32-unknown-unknown/release/rust-ffi-playground.wasm --out-dir ./dist --target web # generate JS and TS FFI bindings into WASM code
 ```
 
 To try it, manually include the script tag to load and initialize the wasm module
@@ -48,7 +48,7 @@ Same [example](https://github.com/rustwasm/team/issues/291#issuecomment-64549261
 
 Not a trivial project, eg. building a native library, link to a system library...
 
-A simple `Makefile` to perform the build steps in order or cross compile for the web using `builder.rs` instead: Use `cargo_zigbuild` and `bindgen` directly in `build.rs` by replacing `cc` with `zigbuild`
+Replace CLI commands with a simple `Makefile` or (even  better) a `builder.rs` file, eg. use `cargo_zigbuild` and `bindgen` directly in `build.rs` by replacing `cc` with `zigbuild`
 
 ```rust
 use cargo_zigbuild::Zig::Cc;
