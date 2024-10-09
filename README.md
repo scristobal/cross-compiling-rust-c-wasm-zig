@@ -12,13 +12,25 @@ bindgen vendor/gcd.h -o src/bindings.rs # generate Rust FFI bindings for gcd.h
 
 ### Quick WASI try out
 
-Using [zigbuild](https://github.com/rust-cross/cargo-zigbuild) we can cross compile to WASI, and using [wasm3](https://github.com/wasm3/wasm3) engine (or other we can try it out).
+Using [zigbuild](https://github.com/rust-cross/cargo-zigbuild) we can cross compile to WASI 
 
 ```bash
 rustup target add wasm32-wasi # make sure wasm32-wasi target is installed 
 cargo zigbuild --target=wasm32-wasi --release # cross compile to WASI, release flag is optional
+```
+
+we can try it with [wasm3](https://github.com/wasm3/wasm3) engine 
+
+```bash
 wasm3 target/wasm32-wasi/release/rust-ffi-playground.wasm # try it out, requires wasm3 
 ```
+
+or [wasmi](https://github.com/wasmi-labs/wasmi)
+
+```bash
+wasmi_cli target/wasm32-wasi/release/rust-ffi-playground.wasm # run it with wasmi runtime
+```
+
 
 ### Cross compile for web (WASM)
 
