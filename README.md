@@ -19,6 +19,9 @@ rustup target add wasm32-wasi # make sure wasm32-wasi target is installed
 cargo zigbuild --target=wasm32-wasi --release # cross compile to WASI, release flag is optional
 ```
 
+> [!warning]
+> The target `wasm32-wasi` is being deprecated in favour of `wasm32-wasip1` and you will [get some warnings](https://blog.rust-lang.org/2024/04/09/updates-to-rusts-wasi-targets.html#renaming-wasm32-wasi-to-wasm32-wasip1). Unfortunatelly trying `--target=wasm32-wasp1` will fail, because cargo-zigbuild does not have support just yet, but [maybe soon](https://github.com/rust-cross/cargo-zigbuild/pull/284). Until then you can use [this fork](https://github.com/scristobal/cargo-zigbuild).
+
 we can try it with [wasm3](https://github.com/wasm3/wasm3) engine 
 
 ```bash
