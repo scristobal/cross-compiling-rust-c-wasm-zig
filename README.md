@@ -7,7 +7,7 @@ Easy way using [rust-bindgen](https://github.com/rust-lang/rust-bindgen) and [ca
 We just need the C/C++ header files wit the definitions and [rust-bindgen](https://github.com/rust-lang/rust-bindgen) will generate the Rust FFI bindings.
 
 ```bash
-bindgen vendor/gcd.h -o src/bindings.rs # generate Rust FFI bindings for gcd.h
+bindgen some-c-code/gcd.h -o src/bindings.rs # generate Rust FFI bindings for gcd.h
 ```
 
 ### Quick WASI try out
@@ -55,7 +55,7 @@ To try it, manually include the script tag to load and initialize the wasm modul
 
 or use a WASM plugin like [`vite-plugin-wasm`](https://www.npmjs.com/package/vite-plugin-wasm) or use [Trunk](https://trunkrs.dev/)
 
-Note: As in this [github issue](https://github.com/rustwasm/team/issues/291#issuecomment-644946504) it can be compiled to `wasm32-unknown-emscripten`. Can we then use `wasm-bindgen` to generate the bindings?
+Note: As in this [github issue](https://github.com/rustwasm/team/issues/291#issuecomment-644946504) it can be compiled to `wasm32-unknown-emscripten`.
 
 Same [example](https://github.com/rustwasm/team/issues/291#issuecomment-645492619) but using `wasm-pack`, hence `wasm-bindgen` instead
 
@@ -70,13 +70,13 @@ use cargo_zigbuild::Zig::Cc;
 use std::{env, error::Error};
 
 fn main() -> Result<(), Box<dyn Error>> {
-    cc::Build::new().file("vendor/def.c").compile("def");
+    cc::Build::new().file("some-c-code/def.c").compile("def");
 
     let out_dir = env::var("OUT_DIR").unwrap();
 
     let cc = Cc {
         args: vec![
-            format!("vendor/def.c"),
+            format!("some-c-code/def.c"),
             "-c".to_string(),
             "-o".to_string(),
             format!("{}/def.o", out_dir),
@@ -98,7 +98,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     println!("cargo:rustc-link-search=native={}", out_dir);
     println!("cargo:rustc-link-lib=static=def");
 
-    println!("cargo:rerun-if-changed=vendor");
+    println!("cargo:rerun-if-changed=some-c-code");
     println!("cargo:rerun-if-changed=build.rs");
     Ok(())
 }
