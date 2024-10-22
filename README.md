@@ -15,23 +15,23 @@ bindgen vendor/gcd.h -o src/bindings.rs # generate Rust FFI bindings for gcd.h
 Using [zigbuild](https://github.com/rust-cross/cargo-zigbuild) we can cross compile to WASI 
 
 ```bash
-rustup target add wasm32-wasi # make sure wasm32-wasi target is installed 
-cargo zigbuild --target=wasm32-wasi --release # cross compile to WASI, release flag is optional
+rustup target add wasm32-wasip1 # make sure wasm32-wasi target is installed 
+cargo zigbuild --target=wasm32-wasip1 --release # cross compile to WASI, release flag is optional
 ```
 
 > [!warning]
-> The target `wasm32-wasi` is being deprecated in favour of `wasm32-wasip1` and you will [get some warnings](https://blog.rust-lang.org/2024/04/09/updates-to-rusts-wasi-targets.html#renaming-wasm32-wasi-to-wasm32-wasip1). Unfortunatelly trying `--target=wasm32-wasp1` will fail, because cargo-zigbuild does not have support just yet, but [maybe soon](https://github.com/rust-cross/cargo-zigbuild/pull/284). Until then you can use [this fork](https://github.com/scristobal/cargo-zigbuild).
+> Previously the target `wasm32-wasip1` was `wasm32-wasi` but it is now being deprecated, still you might want to use it even if you [get some warnings](https://blog.rust-lang.org/2024/04/09/updates-to-rusts-wasi-targets.html#renaming-wasm32-wasi-to-wasm32-wasip1).
 
 we can try it with [wasm3](https://github.com/wasm3/wasm3) engine 
 
 ```bash
-wasm3 target/wasm32-wasi/release/rust-ffi-playground.wasm # try it out, requires wasm3 
+wasm3 target/wasm32-wasip1/release/rust-ffi-playground.wasm # try it out, requires wasm3 
 ```
 
 or [wasmi](https://github.com/wasmi-labs/wasmi)
 
 ```bash
-wasmi_cli target/wasm32-wasi/release/rust-ffi-playground.wasm # run it with wasmi runtime
+wasmi_cli target/wasm32-wasip1/release/rust-ffi-playground.wasm # run it with wasmi runtime
 ```
 
 
