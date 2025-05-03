@@ -108,7 +108,8 @@ fn main() -> Result<(), Box<dyn Error>> {
 
 - [The `cc-rs` project](https://crates.io/crates/cc)
 - [Official cargo reference](https://doc.rust-lang.org/cargo/reference/build-script-examples.html)
-- Zig cross compilation
+- [zig.guide's Cross-compilation](https://zig.guide/build-system/cross-compilation/)
+- [`zig cc`: a Powerful Drop-In Replacement for GCC/Clang](https://andrewkelley.me/post/zig-cc-powerful-drop-in-replacement-gcc-clang.html)
 - [Bindgen tutorial](https://rust-lang.github.io/rust-bindgen/tutorial-3.html)
 - [The embedded Rust book](https://docs.rust-embedded.org/book/interoperability/c-with-rust.html)
 - [Shrinking `.wasm` code size](https://rustwasm.github.io/docs/book/reference/code-size.html)
