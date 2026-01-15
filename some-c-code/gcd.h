@@ -1,5 +1,5 @@
 /**
- * @file def.h
+ * @file gcd.h
  * @brief This is an example header file providing functionality XYZ.
  * @author John Doe
  * @date January 1, 2024

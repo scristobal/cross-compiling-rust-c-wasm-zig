@@ -1,13 +1,12 @@
 [package]
 name = "rust-ffi-playground"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 
 [build-dependencies]
-bindgen = "0.69.4"
-cargo-zigbuild = "0.18.3"
-cc = "1.0.83"
+bindgen = "0.72.1"
+cc = "1.2.52"

@@ -1,18 +1,6 @@
 # Crosscompile a Rust project with C dependencies into Web Assembly (WASM and WASI) using Zig
 
-Easy way using [rust-bindgen](https://github.com/rust-lang/rust-bindgen) and [cargo-zigbuild](https://github.com/rust-cross/cargo-zigbuild) CLI tools.
-
-### Generate Rust bindings for the C code
-
-We just need the C/C++ header files wit the definitions and [rust-bindgen](https://github.com/rust-lang/rust-bindgen) will generate the Rust FFI bindings.
-
-```bash
-bindgen some-c-code/gcd.h -o src/bindings.rs # generate Rust FFI bindings for gcd.h
-```
-
-### Quick WASI try out
-
-Using [zigbuild](https://github.com/rust-cross/cargo-zigbuild) we can cross compile to WASI 
+Cross-compiling made easy way using [cargo-zigbuild](https://github.com/rust-cross/cargo-zigbuild) CLI.
 
 ```bash
 rustup target add wasm32-wasip1 # make sure wasm32-wasi target is installed 
@@ -34,6 +22,15 @@ or [wasmi](https://github.com/wasmi-labs/wasmi)
 wasmi_cli target/wasm32-wasip1/release/rust-ffi-playground.wasm # run it with wasmi runtime
 ```
 
+## More
+
+### Generate Rust bindings for the C code using bindgen_cli
+
+The Rust FFI bindings to the C function are generated at build time in `build.rs` but they can also be generated manually using [rust-bindgen](https://github.com/rust-lang/rust-bindgen) CLI.
+
+```bash
+bindgen some-c-code/gcd.h -o src/bindings.rs # generate Rust FFI bindings for gcd.h
+```
 
 ### Cross compile for web (WASM)
 
@@ -61,9 +58,7 @@ Same [example](https://github.com/rustwasm/team/issues/291#issuecomment-64549261
 
 ### Going further
 
-Not a trivial project, eg. building a native library, link to a system library...
-
-Replace CLI commands with a simple `Makefile` or (even  better) a `builder.rs` file, eg. use `cargo_zigbuild` and `bindgen` directly in `build.rs` by replacing `cc` with `zigbuild`
+Use `cargo_zigbuild` directly in `build.rs` by replacing `cc` with `zigbuild`
 
 ```rust
 use cargo_zigbuild::Zig::Cc;
