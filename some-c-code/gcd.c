@@ -1,6 +1,7 @@
 #include "gcd.h"
 
-int gcd(int i, Pair* ps) {
+int gcd(Pair* ps) {
+    int i = 1;
     int gcd;
     for (; i <= ps->n && i <= ps->m; ++i) {
         // Checks if i is factor of both integers

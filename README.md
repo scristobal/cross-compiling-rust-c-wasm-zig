@@ -2,6 +2,8 @@
 
 Cross-compiling made easy way using [cargo-zigbuild](https://github.com/rust-cross/cargo-zigbuild) CLI.
 
+## Compile to WebAssembly (wasi)
+
 ```bash
 rustup target add wasm32-wasip1 # make sure wasm32-wasi target is installed 
 cargo zigbuild --target=wasm32-wasip1 --release # cross compile to WASI, release flag is optional
@@ -22,17 +24,7 @@ or [wasmi](https://github.com/wasmi-labs/wasmi)
 wasmi_cli target/wasm32-wasip1/release/rust-ffi-playground.wasm # run it with wasmi runtime
 ```
 
-## More
-
-### Generate Rust bindings for the C code using bindgen_cli
-
-The Rust FFI bindings to the C function are generated at build time in `build.rs` but they can also be generated manually using [rust-bindgen](https://github.com/rust-lang/rust-bindgen) CLI.
-
-```bash
-bindgen some-c-code/gcd.h -o src/bindings.rs # generate Rust FFI bindings for gcd.h
-```
-
-### Cross compile for web (WASM)
+### Cross compile for WebAssembly (web)
 
 Generate code for WASM with [zigbuild](https://github.com/rust-cross/cargo-zigbuild), and then use [wasm-bindgen](https://github.com/rustwasm/wasm-bindgen) to generate the js/ts bindings to the WASM code.
 
@@ -56,47 +48,28 @@ Note: As in this [github issue](https://github.com/rustwasm/team/issues/291#issu
 
 Same [example](https://github.com/rustwasm/team/issues/291#issuecomment-645492619) but using `wasm-pack`, hence `wasm-bindgen` instead
 
+## Compile to RISC-V (linux-musl)
+
+```
+rustup target add riscv64gc-unknown-linux-musl
+cargo zigbuild --target riscv64gc-unknown-linux-musl
+```
+
+we can use qemu to try it
+
+```
+sudo pacman -S qemu-user
+qemu-riscv64 ./target/riscv64gc-unknown-linux-musl/debug/rust-ffi-playground
+```
+
 ### Going further
 
-Use `cargo_zigbuild` directly in `build.rs` by replacing `cc` with `zigbuild`
+### Generate Rust bindings for the C code using bindgen_cli
 
-```rust
-use cargo_zigbuild::Zig::Cc;
-use std::{env, error::Error};
+The Rust FFI bindings to the C function are generated at build time in `build.rs` but they can also be generated manually using [rust-bindgen](https://github.com/rust-lang/rust-bindgen) CLI.
 
-fn main() -> Result<(), Box<dyn Error>> {
-    cc::Build::new().file("some-c-code/def.c").compile("def");
-
-    let out_dir = env::var("OUT_DIR").unwrap();
-
-    let cc = Cc {
-        args: vec![
-            format!("some-c-code/def.c"),
-            "-c".to_string(),
-            "-o".to_string(),
-            format!("{}/def.o", out_dir),
-        ],
-    };
-
-    cc.execute().expect("Failed to compile def.c");
-
-    let ar = cargo_zigbuild::Zig::Ar {
-        args: vec![
-            "crus".to_string(),
-            format!("{}/libdef.a", out_dir),
-            format!("{}/def.o", out_dir),
-        ],
-    };
-
-    ar.execute().expect("Failed to create def.a");
-
-    println!("cargo:rustc-link-search=native={}", out_dir);
-    println!("cargo:rustc-link-lib=static=def");
-
-    println!("cargo:rerun-if-changed=some-c-code");
-    println!("cargo:rerun-if-changed=build.rs");
-    Ok(())
-}
+```bash
+bindgen some-c-code/gcd.h -o src/bindings.rs # generate Rust FFI bindings for gcd.h
 ```
 
 ## References
