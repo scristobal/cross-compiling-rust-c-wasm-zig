@@ -64,12 +64,83 @@ qemu-riscv64 ./target/riscv64gc-unknown-linux-musl/debug/rust-ffi-playground
 
 ### Going further
 
-### Generate Rust bindings for the C code using bindgen_cli
+## Generate Rust bindings for the C code 
 
-The Rust FFI bindings to the C function are generated at build time in `build.rs` but they can also be generated manually using [rust-bindgen](https://github.com/rust-lang/rust-bindgen) CLI.
+The Rust FFI bindings to the C function are generated at build time in `build.rs` but they can also be generated manually
+
+```rust
+// src/bindings.rs
+
+#[repr(C)]
+pub struct Pair {
+    pub n: ::core::ffi::c_int,
+    pub m: ::core::ffi::c_int,
+}
+
+unsafe extern "C" {
+    pub fn gcd(ps: *mut Pair) -> ::core::ffi::c_int;
+}
+```
+
+or using [rust-bindgen](https://github.com/rust-lang/rust-bindgen) CLI.
 
 ```bash
-bindgen some-c-code/gcd.h -o src/bindings.rs # generate Rust FFI bindings for gcd.h
+bindgen some-c-code/gcd.h -o src/bindings.rs
+```
+
+## Cross compilation without zigbuild
+
+Without `cargo-zigbuild`, you need to manually install cross-compilation toolchains and configure Cargo to use them.
+
+### WebAssembly (wasm32-wasip1)
+
+Use clang/LLVM to compile C code to WASM:
+
+```bash
+# Install WASI SDK (provides clang with WASI sysroot)
+# Download from https://github.com/WebAssembly/wasi-sdk/releases
+
+export WASI_SDK_PATH=/path/to/wasi-sdk
+export CC_wasm32_wasip1="$WASI_SDK_PATH/bin/clang --sysroot=$WASI_SDK_PATH/share/wasi-sysroot"
+export AR_wasm32_wasip1="$WASI_SDK_PATH/bin/llvm-ar"
+
+rustup target add wasm32-wasip1
+cargo build --target=wasm32-wasip1 --release
+```
+
+### WebAssembly (wasm32-unknown-unknown)
+
+```bash
+export CC_wasm32_unknown_unknown="clang --target=wasm32"
+export AR_wasm32_unknown_unknown="llvm-ar"
+
+rustup target add wasm32-unknown-unknown
+cargo build --target=wasm32-unknown-unknown --release
+```
+
+### RISC-V (riscv64gc-unknown-linux-musl)
+
+Install a RISC-V GCC toolchain and configure Cargo:
+
+```bash
+sudo pacman -S riscv64-elf-gcc riscv64-linux-gnu-gcc
+
+export CC_riscv64gc_unknown_linux_musl=riscv64-linux-gnu-gcc
+export AR_riscv64gc_unknown_linux_musl=riscv64-linux-gnu-ar
+```
+
+Create or edit `.cargo/config.toml`:
+
+```toml
+[target.riscv64gc-unknown-linux-musl]
+linker = "riscv64-linux-gnu-gcc"
+```
+
+Then build:
+
+```bash
+rustup target add riscv64gc-unknown-linux-musl
+cargo build --target=riscv64gc-unknown-linux-musl
 ```
 
 ## References
@@ -89,6 +160,8 @@ wasm-bindgen targets `wasm32-unknown-unknown` and `wasi-unknown` do not (fully) 
 See [comment](https://github.com/rustwasm/team/issues/291#issuecomment-645482430), [comment](https://github.com/rustwasm/team/issues/291#issuecomment-645494771) and [documentation PR](https://github.com/rustwasm/wasm-bindgen/pull/2209)
 
 There is an experimental flag `--Z wasm_c_abi=spec` that [circumvents this limitation](https://github.com/rustwasm/team/issues/291#issuecomment-2138201722)
+
+Update: [it has been merged!](https://github.com/rust-lang/rust/pull/133952) 
 
 ## Other tools
 
