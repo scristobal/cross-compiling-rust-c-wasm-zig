@@ -48,20 +48,6 @@ Note: As in this [github issue](https://github.com/rustwasm/team/issues/291#issu
 
 Same [example](https://github.com/rustwasm/team/issues/291#issuecomment-645492619) but using `wasm-pack`, hence `wasm-bindgen` instead
 
-## Compile to RISC-V (linux-musl)
-
-```
-rustup target add riscv64gc-unknown-linux-musl
-cargo zigbuild --target riscv64gc-unknown-linux-musl
-```
-
-we can use qemu to try it
-
-```
-sudo pacman -S qemu-user
-qemu-riscv64 ./target/riscv64gc-unknown-linux-musl/debug/rust-ffi-playground
-```
-
 ### Going further
 
 ## Generate Rust bindings for the C code 
@@ -116,31 +102,6 @@ export AR_wasm32_unknown_unknown="llvm-ar"
 
 rustup target add wasm32-unknown-unknown
 cargo build --target=wasm32-unknown-unknown --release
-```
-
-### RISC-V (riscv64gc-unknown-linux-musl)
-
-Install a RISC-V GCC toolchain and configure Cargo:
-
-```bash
-sudo pacman -S riscv64-elf-gcc riscv64-linux-gnu-gcc
-
-export CC_riscv64gc_unknown_linux_musl=riscv64-linux-gnu-gcc
-export AR_riscv64gc_unknown_linux_musl=riscv64-linux-gnu-ar
-```
-
-Create or edit `.cargo/config.toml`:
-
-```toml
-[target.riscv64gc-unknown-linux-musl]
-linker = "riscv64-linux-gnu-gcc"
-```
-
-Then build:
-
-```bash
-rustup target add riscv64gc-unknown-linux-musl
-cargo build --target=riscv64gc-unknown-linux-musl
 ```
 
 ## References
