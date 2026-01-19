@@ -15,13 +15,13 @@ cargo zigbuild --target=wasm32-wasip1 --release # cross compile to WASI, release
 we can try it with [wasm3](https://github.com/wasm3/wasm3) engine 
 
 ```bash
-wasm3 target/wasm32-wasip1/release/rust-ffi-playground.wasm # try it out, requires wasm3 
+wasm3 target/wasm32-wasip1/release/rust-ffi-playground.wasm
 ```
 
 or [wasmi](https://github.com/wasmi-labs/wasmi)
 
 ```bash
-wasmi_cli target/wasm32-wasip1/release/rust-ffi-playground.wasm # run it with wasmi runtime
+wasmi_cli target/wasm32-wasip1/release/rust-ffi-playground.wasm
 ```
 
 ### Cross compile for WebAssembly (web)
@@ -37,7 +37,7 @@ To try it, manually include the script tag to load and initialize the wasm modul
 
 ```html
 <script type="module">
-  import init from "./bin/rust-ffi-playground.js";
+  import init from "./dist/rust-ffi-playground.js";
   init().then(() => console.log("WASM Loaded"));
 </script>
 ```
@@ -55,8 +55,6 @@ Same [example](https://github.com/rustwasm/team/issues/291#issuecomment-64549261
 The Rust FFI bindings to the C function are generated at build time in `build.rs` but they can also be generated manually
 
 ```rust
-// src/bindings.rs
-
 #[repr(C)]
 pub struct Pair {
     pub n: ::core::ffi::c_int,
